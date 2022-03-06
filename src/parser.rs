@@ -1,7 +1,7 @@
 extern crate nom;
 use nom::{
-    bytes::complete::{tag, take_while},
-    character::is_alphanumeric,
+    bytes::complete::{take_till1, take_while1},
+    character::is_space,
     combinator::map,
     sequence::preceded,
     IResult,
@@ -20,7 +20,10 @@ fn to_test_label(name: &[u8]) -> TestLabel {
 
 fn test_label_parser(input: &str) -> IResult<&[u8], TestLabel> {
     return map(
-        preceded(tag("//:"), take_while(is_alphanumeric)),
+        preceded(
+            take_while1(|c| c == b'/' || c == b':'),
+            take_till1(is_space),
+        ),
         to_test_label,
     )(input.as_bytes());
 }
