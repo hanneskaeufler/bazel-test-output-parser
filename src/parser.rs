@@ -9,7 +9,13 @@ pub fn parse(_output: &str) -> Vec<TestLabel> {
 
 #[cfg(test)]
 mod test {
-    use super::parse;
+    use super::{parse, TestLabel};
+
+    fn label(name: &str) -> TestLabel {
+        return TestLabel {
+            name: name.to_string(),
+        };
+    }
 
     #[test]
     fn test_parse_with_single_toplevel_passing_test() {
@@ -17,7 +23,7 @@ mod test {
 
         let tests = parse(&buffer);
 
-        assert_ne!(tests, vec![])
+        assert_eq!(tests, vec![label(":sometest")])
     }
 
     #[test]
@@ -26,7 +32,7 @@ mod test {
 
         let tests = parse(&buffer);
 
-        assert_ne!(tests, vec![])
+        assert_eq!(tests, vec![label(":sometest")])
     }
 
     #[test]
@@ -35,7 +41,7 @@ mod test {
 
         let tests = parse(&buffer);
 
-        assert_ne!(tests, vec![])
+        assert_eq!(tests, vec![label(":sometest")])
     }
 
     #[test]
@@ -44,6 +50,15 @@ mod test {
 
         let tests = parse(&buffer);
 
-        assert_ne!(tests, vec![])
+        assert_eq!(tests, vec![label(":sometest")])
+    }
+
+    #[test]
+    fn test_parse_with_subpackage_test() {
+        let buffer = "//some:sometest      FAILED in 0.1s\n";
+
+        let tests = parse(&buffer);
+
+        assert_eq!(tests, vec![label("some:sometest")])
     }
 }
