@@ -1,13 +1,16 @@
 use runfiles::Runfiles;
 use std::io::Write;
+use std::path::PathBuf;
 use std::process::{Command, Stdio};
+
+fn find_program() -> PathBuf {
+    let runfiles = Runfiles::create().unwrap();
+    return runfiles.rlocation("__main__/src/main");
+}
 
 #[test]
 fn test_fails_with_empty_stdin() {
-    let runfiles = Runfiles::create().unwrap();
-    let program = runfiles.rlocation("__main__/src/main");
-
-    let status = Command::new(program)
+    let status = Command::new(find_program())
         .status()
         .expect("failed to run the command");
 
@@ -16,10 +19,7 @@ fn test_fails_with_empty_stdin() {
 
 #[test]
 fn test_succeeds_with_typical_stdin() {
-    let runfiles = Runfiles::create().unwrap();
-    let program = runfiles.rlocation("__main__/src/main");
-
-    let mut process = Command::new(program)
+    let mut process = Command::new(find_program())
         .stdin(Stdio::piped())
         .spawn()
         .expect("failed to run the command");
