@@ -19,13 +19,11 @@ fn to_test_label(name: &[u8]) -> TestLabel {
 }
 
 fn test_label_parser(input: &str) -> IResult<&[u8], TestLabel> {
-    return map(
-        preceded(
-            take_while1(|c| c == b'/' || c == b':'),
-            take_till1(is_space),
-        ),
-        to_test_label,
-    )(input.as_bytes());
+    let start_of_label = take_while1(|c| c == b'/' || c == b':');
+    let label = take_till1(is_space);
+    let label_only = preceded(start_of_label, label);
+
+    return map(label_only, to_test_label)(input.as_bytes());
 }
 
 pub fn parse(input: &str) -> Vec<TestLabel> {
