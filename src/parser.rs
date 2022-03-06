@@ -27,13 +27,17 @@ fn test_label_parser(input: &str) -> IResult<&[u8], TestLabel> {
 }
 
 pub fn parse(input: &str) -> Vec<TestLabel> {
-    let parse_result = test_label_parser(input);
+    let mut test_labels = Vec::new();
 
-    if parse_result.is_ok() {
-        return vec![parse_result.unwrap().1];
+    for line in input.lines() {
+        let parse_result = test_label_parser(line);
+
+        if parse_result.is_ok() {
+            test_labels.push(parse_result.unwrap().1);
+        }
     }
 
-    return vec![];
+    return test_labels;
 }
 
 #[cfg(test)]
@@ -79,7 +83,7 @@ mod test {
 
         let tests = parse(&buffer);
 
-        assert_eq!(tests, vec![label("sometest")])
+        assert_eq!(tests, vec![label("sometest"), label("othertest")])
     }
 
     #[test]
