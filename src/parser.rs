@@ -1,9 +1,37 @@
+extern crate nom;
+use nom::{
+    bytes::complete::{tag, take_while},
+    character::is_alphanumeric,
+    combinator::map,
+    sequence::preceded,
+    IResult,
+};
+
 #[derive(PartialEq, Debug)]
 pub struct TestLabel {
     name: String,
 }
 
-pub fn parse(_output: &str) -> Vec<TestLabel> {
+fn to_test_label(name: &[u8]) -> TestLabel {
+    TestLabel {
+        name: String::from_utf8(name.to_vec()).unwrap_or_default(),
+    }
+}
+
+fn test_label_parser(input: &str) -> IResult<&[u8], TestLabel> {
+    return map(
+        preceded(tag("//:"), take_while(is_alphanumeric)),
+        to_test_label,
+    )(input.as_bytes());
+}
+
+pub fn parse(input: &str) -> Vec<TestLabel> {
+    let parse_result = test_label_parser(input);
+
+    if parse_result.is_ok() {
+        return vec![parse_result.unwrap().1];
+    }
+
     return vec![];
 }
 
@@ -23,7 +51,7 @@ mod test {
 
         let tests = parse(&buffer);
 
-        assert_eq!(tests, vec![label(":sometest")])
+        assert_eq!(tests, vec![label("sometest")])
     }
 
     #[test]
@@ -32,7 +60,7 @@ mod test {
 
         let tests = parse(&buffer);
 
-        assert_eq!(tests, vec![label(":sometest")])
+        assert_eq!(tests, vec![label("sometest")])
     }
 
     #[test]
@@ -41,7 +69,7 @@ mod test {
 
         let tests = parse(&buffer);
 
-        assert_eq!(tests, vec![label(":sometest")])
+        assert_eq!(tests, vec![label("sometest")])
     }
 
     #[test]
@@ -50,7 +78,7 @@ mod test {
 
         let tests = parse(&buffer);
 
-        assert_eq!(tests, vec![label(":sometest")])
+        assert_eq!(tests, vec![label("sometest")])
     }
 
     #[test]
