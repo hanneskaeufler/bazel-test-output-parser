@@ -37,4 +37,13 @@ mod test {
 
         assert_ne!(tests, vec![])
     }
+
+    #[test]
+    fn test_parse_with_multiple_toplevel_tests() {
+        let buffer = "//:sometest      FAILED in 0.1s\n//:othertest     PASSED in 0.5s";
+
+        let tests = parse(&buffer);
+
+        assert_ne!(tests, vec![])
+    }
 }
