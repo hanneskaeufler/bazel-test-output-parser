@@ -1,6 +1,0 @@
-load("@rules_rust//rust:defs.bzl", "rust_binary", "rust_test", "rustfmt_test")
-
-rustfmt_test(
-    name = "format_tests",
-    targets = ["//src:main"],
-)
