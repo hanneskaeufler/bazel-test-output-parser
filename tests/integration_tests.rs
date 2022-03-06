@@ -33,3 +33,26 @@ fn test_succeeds_with_typical_stdin() {
     let status = process.wait().expect("process did not exit");
     assert!(status.success())
 }
+
+#[test]
+fn test_prints_test_xmls() {
+    let process = Command::new(find_program())
+        .stdin(Stdio::piped())
+        .stdout(Stdio::piped())
+        .spawn()
+        .expect("failed to run the command");
+
+    process
+        .stdin
+        .as_ref()
+        .unwrap()
+        .write_all(b"//:some_test            PASSED\n//other/thing:foo")
+        .expect("failed to write to stdin");
+
+    let output = process.wait_with_output().expect("process did not exit");
+
+    assert_eq!(
+        String::from_utf8(output.stdout).unwrap_or_default(),
+        "bazel-testlogs/some_test.xml\nbazel-testlogs/other/thing/foo.xml\n"
+    )
+}

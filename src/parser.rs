@@ -1,36 +1,42 @@
 extern crate nom;
 use nom::{
-    bytes::complete::{take_till1, take_while1},
+    bytes::complete::{tag, take_till1, take_while},
     character::is_space,
     combinator::map,
-    sequence::preceded,
+    sequence::{pair, preceded},
     IResult,
 };
 
 #[derive(PartialEq, Debug)]
 pub struct TestLabel {
-    name: String,
+    pub path: String,
+    pub name: String,
 }
 
-fn to_test_label(name: &[u8]) -> TestLabel {
+fn to_test_label((path, name): (&[u8], &[u8])) -> TestLabel {
     TestLabel {
+        path: String::from_utf8(path.to_vec()).unwrap_or_default(),
         name: String::from_utf8(name.to_vec()).unwrap_or_default(),
     }
 }
 
-fn test_label_parser(input: &str) -> IResult<&[u8], TestLabel> {
-    let start_of_label = take_while1(|c| c == b'/' || c == b':');
-    let label = take_till1(is_space);
-    let label_only = preceded(start_of_label, label);
+fn test_label_parser(input: &[u8]) -> IResult<&[u8], TestLabel> {
+    let start_of_label = tag("//");
+    let label_target = take_till1(is_space);
+    let label_path = take_while(|c| c != b':');
+    let label_only = pair(
+        preceded(start_of_label, label_path),
+        preceded(tag(":"), label_target),
+    );
 
-    return map(label_only, to_test_label)(input.as_bytes());
+    return map(label_only, to_test_label)(input);
 }
 
 pub fn parse(input: &str) -> Vec<TestLabel> {
     let mut test_labels = Vec::new();
 
     for line in input.lines() {
-        let parse_result = test_label_parser(line);
+        let parse_result = test_label_parser(line.as_bytes());
 
         if parse_result.is_ok() {
             test_labels.push(parse_result.unwrap().1);
@@ -44,8 +50,16 @@ pub fn parse(input: &str) -> Vec<TestLabel> {
 mod test {
     use super::{parse, TestLabel};
 
-    fn label(name: &str) -> TestLabel {
+    fn pathless_label(name: &str) -> TestLabel {
         return TestLabel {
+            path: String::new(),
+            name: name.to_string(),
+        };
+    }
+
+    fn label(path: &str, name: &str) -> TestLabel {
+        return TestLabel {
+            path: path.to_string(),
             name: name.to_string(),
         };
     }
@@ -56,7 +70,7 @@ mod test {
 
         let tests = parse(&buffer);
 
-        assert_eq!(tests, vec![label("sometest")])
+        assert_eq!(tests, vec![pathless_label("sometest")])
     }
 
     #[test]
@@ -65,7 +79,7 @@ mod test {
 
         let tests = parse(&buffer);
 
-        assert_eq!(tests, vec![label("sometest")])
+        assert_eq!(tests, vec![pathless_label("sometest")])
     }
 
     #[test]
@@ -74,7 +88,7 @@ mod test {
 
         let tests = parse(&buffer);
 
-        assert_eq!(tests, vec![label("sometest")])
+        assert_eq!(tests, vec![pathless_label("sometest")])
     }
 
     #[test]
@@ -83,7 +97,10 @@ mod test {
 
         let tests = parse(&buffer);
 
-        assert_eq!(tests, vec![label("sometest"), label("othertest")])
+        assert_eq!(
+            tests,
+            vec![pathless_label("sometest"), pathless_label("othertest")]
+        )
     }
 
     #[test]
@@ -92,6 +109,6 @@ mod test {
 
         let tests = parse(&buffer);
 
-        assert_eq!(tests, vec![label("some:sometest")])
+        assert_eq!(tests, vec![label("some", "sometest")])
     }
 }
