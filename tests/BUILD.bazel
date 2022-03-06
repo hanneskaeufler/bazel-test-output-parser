@@ -3,4 +3,6 @@ load("@rules_rust//rust:defs.bzl", "rust_test")
 rust_test(
     name = "integration_tests",
     srcs = ["integration_tests.rs"],
+    data = ["//src:main"],
+    deps = ["@rules_rust//tools/runfiles"],
 )
