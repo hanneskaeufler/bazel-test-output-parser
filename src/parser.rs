@@ -1,9 +1,9 @@
 #[derive(PartialEq, Debug)]
-pub struct Test {
+pub struct TestLabel {
     name: String,
 }
 
-pub fn parse(_output: &str) -> Vec<Test> {
+pub fn parse(_output: &str) -> Vec<TestLabel> {
     return vec![];
 }
 
