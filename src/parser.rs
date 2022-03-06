@@ -1,4 +1,11 @@
-pub fn parse(_output: &str) {}
+#[derive(PartialEq, Debug)]
+pub struct Test {
+    name: String,
+}
+
+pub fn parse(_output: &str) -> Vec<Test> {
+    return vec![];
+}
 
 #[cfg(test)]
 mod test {
@@ -7,24 +14,27 @@ mod test {
     #[test]
     fn test_parse_with_single_toplevel_passing_test() {
         let buffer = "//:sometest      PASSING in 0.1";
-        parse(&buffer);
 
-        assert!(false)
+        let tests = parse(&buffer);
+
+        assert_ne!(tests, vec![])
     }
 
     #[test]
     fn test_parse_with_single_toplevel_cached_passing_test() {
         let buffer = "//:sometest      (cached) PASSING in 0.1s";
-        parse(&buffer);
 
-        assert!(false)
+        let tests = parse(&buffer);
+
+        assert_ne!(tests, vec![])
     }
 
     #[test]
     fn test_parse_with_single_toplevel_failed_test() {
         let buffer = "//:sometest      FAILED in 0.1s";
-        parse(&buffer);
 
-        assert!(false)
+        let tests = parse(&buffer);
+
+        assert_ne!(tests, vec![])
     }
 }
