@@ -53,6 +53,6 @@ fn test_prints_test_xmls() {
 
     assert_eq!(
         String::from_utf8(output.stdout).unwrap_or_default(),
-        "bazel-testlogs/some_test.xml\nbazel-testlogs/other/thing/foo.xml\n"
+        "bazel-testlogs/some_test/test.xml\nbazel-testlogs/other/thing/foo/test.xml\n"
     )
 }

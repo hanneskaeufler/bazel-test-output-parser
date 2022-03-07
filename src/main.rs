@@ -14,7 +14,7 @@ fn main() -> Result<(), io::Error> {
 
     for label in test_labels {
         println!(
-            "bazel-testlogs/{}{}{}.xml",
+            "bazel-testlogs/{}{}{}/test.xml",
             label.path,
             if label.path.is_empty() { "" } else { "/" },
             label.name
