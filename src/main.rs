@@ -12,6 +12,10 @@ fn main() -> Result<(), io::Error> {
 
     let test_labels = bazel_output_parser::parser::parse(&buffer);
 
+    if test_labels.is_empty() {
+        return Err(io::Error::new(io::ErrorKind::Other, "no tests were parsed"));
+    }
+
     for label in test_labels {
         println!(
             "bazel-testlogs/{}{}{}/test.xml",

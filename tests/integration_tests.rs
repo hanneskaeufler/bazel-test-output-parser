@@ -35,6 +35,26 @@ fn test_succeeds_with_typical_stdin() {
 }
 
 #[test]
+fn test_fails_when_no_tests_were_parsed() {
+    let mut process = Command::new(find_program())
+        .stdin(Stdio::piped())
+        .stdout(Stdio::piped())
+        .spawn()
+        .expect("failed to run the command");
+
+    process
+        .stdin
+        .as_ref()
+        .unwrap()
+        .write_all(b"Just some output but no bazel tests")
+        .expect("failed to write to stdin");
+
+    let status = process.wait().expect("process did not exit");
+
+    assert_eq!(status.code().unwrap(), 1)
+}
+
+#[test]
 fn test_prints_test_xmls() {
     let process = Command::new(find_program())
         .stdin(Stdio::piped())
