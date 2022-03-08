@@ -7,7 +7,6 @@ fn main() -> Result<(), io::Error> {
 
     if args.len() > 1 && args[1] == "--help" {
         println!(
-            "{}",
             "\
 This is a stupid tiny parser for the output
 produced by bazel's (https://bazel.build) test runner.
