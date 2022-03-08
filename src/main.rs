@@ -1,7 +1,5 @@
 use bazel_test_output_parser::parser;
-use std::env;
-use std::io;
-use std::io::Read;
+use std::{env, io, io::Read};
 
 fn main() -> Result<(), io::Error> {
     let args: Vec<String> = env::args().collect();
