@@ -25,5 +25,5 @@ fn main() -> Result<(), io::Error> {
         );
     }
 
-    return Ok(());
+    Ok(())
 }

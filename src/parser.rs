@@ -29,7 +29,7 @@ fn test_label_parser(input: &[u8]) -> IResult<&[u8], TestLabel> {
         preceded(tag(":"), label_target),
     );
 
-    return map(label_only, to_test_label)(input);
+    map(label_only, to_test_label)(input)
 }
 
 pub fn parse(input: &str) -> Vec<TestLabel> {
@@ -43,7 +43,7 @@ pub fn parse(input: &str) -> Vec<TestLabel> {
         }
     }
 
-    return test_labels;
+    test_labels
 }
 
 #[cfg(test)]
@@ -51,24 +51,24 @@ mod test {
     use super::{parse, TestLabel};
 
     fn pathless_label(name: &str) -> TestLabel {
-        return TestLabel {
+        TestLabel {
             path: String::new(),
             name: name.to_string(),
-        };
+        }
     }
 
     fn label(path: &str, name: &str) -> TestLabel {
-        return TestLabel {
+        TestLabel {
             path: path.to_string(),
             name: name.to_string(),
-        };
+        }
     }
 
     #[test]
     fn test_parse_with_single_toplevel_passing_test() {
         let buffer = "//:sometest      PASSING in 0.1";
 
-        let tests = parse(&buffer);
+        let tests = parse(buffer);
 
         assert_eq!(tests, vec![pathless_label("sometest")])
     }
@@ -77,7 +77,7 @@ mod test {
     fn test_parse_with_single_toplevel_cached_passing_test() {
         let buffer = "//:sometest      (cached) PASSING in 0.1s";
 
-        let tests = parse(&buffer);
+        let tests = parse(buffer);
 
         assert_eq!(tests, vec![pathless_label("sometest")])
     }
@@ -86,7 +86,7 @@ mod test {
     fn test_parse_with_single_toplevel_failed_test() {
         let buffer = "//:sometest      FAILED in 0.1s";
 
-        let tests = parse(&buffer);
+        let tests = parse(buffer);
 
         assert_eq!(tests, vec![pathless_label("sometest")])
     }
@@ -95,7 +95,7 @@ mod test {
     fn test_parse_with_multiple_toplevel_tests() {
         let buffer = "//:sometest      FAILED in 0.1s\n//:othertest     PASSED in 0.5s";
 
-        let tests = parse(&buffer);
+        let tests = parse(buffer);
 
         assert_eq!(
             tests,
@@ -107,7 +107,7 @@ mod test {
     fn test_parse_with_subpackage_test() {
         let buffer = "//some:sometest      FAILED in 0.1s\n";
 
-        let tests = parse(&buffer);
+        let tests = parse(buffer);
 
         assert_eq!(tests, vec![label("some", "sometest")])
     }
