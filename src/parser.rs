@@ -38,8 +38,8 @@ pub fn parse(input: &str) -> Vec<TestLabel> {
     for line in input.lines() {
         let parse_result = test_label_parser(line.as_bytes());
 
-        if parse_result.is_ok() {
-            test_labels.push(parse_result.unwrap().1);
+        if let Ok(test_label) = parse_result {
+            test_labels.push(test_label.1);
         }
     }
 
