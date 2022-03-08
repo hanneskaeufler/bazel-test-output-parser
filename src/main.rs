@@ -1,6 +1,5 @@
-use std::env;
-use std::io;
-use std::io::Read;
+use bazel_test_output_parser::parser;
+use std::{env, io, io::Read};
 
 fn main() -> Result<(), io::Error> {
     let args: Vec<String> = env::args().collect();
@@ -16,7 +15,7 @@ by this program to get a list of junit test results that
 bazel produced.
 
 Usage example:
-    cat my.log | bazel-output-parser"
+    cat my.log | bazel-test-output-parser"
         );
         return Ok(());
     }
@@ -28,7 +27,7 @@ Usage example:
         return Err(io::Error::new(io::ErrorKind::Other, "stdin was empty"));
     }
 
-    let test_labels = bazel_output_parser::parser::parse(&buffer);
+    let test_labels = parser::parse(&buffer);
 
     if test_labels.is_empty() {
         return Err(io::Error::new(io::ErrorKind::Other, "no tests were parsed"));

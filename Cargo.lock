@@ -3,7 +3,7 @@
 version = 3
 
 [[package]]
-name = "bazel-output-parser"
+name = "bazel-test-output-parser"
 version = "0.2.0"
 dependencies = [
  "nom",

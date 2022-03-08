@@ -1,5 +1,5 @@
 [package]
-name = "bazel-output-parser"
+name = "bazel-test-output-parser"
 version = "0.2.0"
 edition = "2021"
 
