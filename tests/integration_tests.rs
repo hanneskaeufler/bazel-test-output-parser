@@ -76,3 +76,13 @@ fn test_prints_test_xmls() {
         "bazel-testlogs/some_test/test.xml\nbazel-testlogs/other/thing/foo/test.xml\n"
     )
 }
+
+#[test]
+fn test_prints_help() {
+    let output = Command::new(find_program())
+        .arg("--help")
+        .output()
+        .expect("failed to run the command");
+
+    assert!(String::from_utf8(output.stdout).unwrap().contains("Usage"))
+}
