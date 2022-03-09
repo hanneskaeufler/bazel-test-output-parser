@@ -23,8 +23,8 @@ fn to_test_label((path, name): (&[u8], &[u8])) -> TestLabel {
 
 fn test_label_parser(input: &[u8]) -> IResult<&[u8], TestLabel> {
     let start_of_label = tag("//");
-    let label_target = take_till1(is_space);
     let label_path = take_while(|c| c != b':');
+    let label_target = take_till1(is_space);
     let label_only = pair(
         preceded(start_of_label, label_path),
         preceded(tag(":"), label_target),
@@ -44,8 +44,9 @@ pub fn parse(input: &str) -> Vec<TestLabel> {
     for line in input.lines() {
         let parse_result = test_label_parser(line.as_bytes());
 
-        if let Ok(test_label) = parse_result {
-            test_labels.push(test_label.1);
+        if let Ok(result) = parse_result {
+            let (_, label) = result;
+            test_labels.push(label);
         }
     }
 
