@@ -15,7 +15,8 @@ by this program to get a list of junit test results that
 bazel produced.
 
 Usage example:
-    cat my.log | bazel-test-output-parser"
+    cat my.log | {}",
+            env!("CARGO_PKG_NAME")
         );
         return Ok(());
     } else if args.len() > 1 && args[1] == "--version" {

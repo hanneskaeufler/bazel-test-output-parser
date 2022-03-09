@@ -3,7 +3,7 @@ use std::path::PathBuf;
 use std::process::{Command, Stdio};
 
 fn find_program() -> PathBuf {
-    PathBuf::from("target/debug/bazel-test-output-parser")
+    PathBuf::from(format!("target/debug/{}", env!("CARGO_PKG_NAME")))
 }
 
 #[test]
