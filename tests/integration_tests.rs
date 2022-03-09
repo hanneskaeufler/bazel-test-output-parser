@@ -86,3 +86,16 @@ fn test_prints_help() {
 
     assert!(String::from_utf8(output.stdout).unwrap().contains("Usage"))
 }
+
+#[test]
+fn test_prints_version() {
+    let output = Command::new(find_program())
+        .arg("--version")
+        .output()
+        .expect("failed to run the command");
+
+    assert_eq!(
+        format!("{}\n", env!("CARGO_PKG_VERSION")),
+        String::from_utf8(output.stdout).unwrap()
+    );
+}

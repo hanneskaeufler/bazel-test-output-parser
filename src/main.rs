@@ -18,6 +18,8 @@ Usage example:
     cat my.log | bazel-test-output-parser"
         );
         return Ok(());
+    } else if args.len() > 1 && args[1] == "--version" {
+        println!(env!("CARGO_PKG_VERSION"));
     }
 
     let mut buffer = String::new();
