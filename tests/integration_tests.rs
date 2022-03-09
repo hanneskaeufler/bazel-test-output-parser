@@ -66,7 +66,7 @@ fn test_prints_test_xmls() {
         .stdin
         .as_ref()
         .unwrap()
-        .write_all(b"//:some_test            PASSED\n//other/thing:foo")
+        .write_all(b"//:some_test            PASSED\n//other/thing:foo (cached) PASSED")
         .expect("failed to write to stdin");
 
     let output = process.wait_with_output().expect("process did not exit");

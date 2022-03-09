@@ -1,9 +1,10 @@
 extern crate nom;
 use nom::{
-    bytes::complete::{tag, take_till1, take_while},
+    branch::alt,
+    bytes::complete::{tag, take_till1, take_while, take_while1},
     character::is_space,
     combinator::map,
-    sequence::{pair, preceded},
+    sequence::{pair, preceded, terminated},
     IResult,
 };
 
@@ -29,7 +30,12 @@ fn test_label_parser(input: &[u8]) -> IResult<&[u8], TestLabel> {
         preceded(tag(":"), label_target),
     );
 
-    map(label_only, to_test_label)(input)
+    let test_result = pair(
+        take_while1(is_space),
+        alt((tag("PASSED"), tag("(cached) PASSED"), tag("FAILED"))),
+    );
+
+    map(terminated(label_only, test_result), to_test_label)(input)
 }
 
 pub fn parse(input: &str) -> Vec<TestLabel> {
@@ -66,7 +72,7 @@ mod test {
 
     #[test]
     fn test_parse_with_single_toplevel_passing_test() {
-        let buffer = "//:sometest      PASSING in 0.1";
+        let buffer = "//:sometest      PASSED in 0.1";
 
         let tests = parse(buffer);
 
@@ -75,7 +81,7 @@ mod test {
 
     #[test]
     fn test_parse_with_single_toplevel_cached_passing_test() {
-        let buffer = "//:sometest      (cached) PASSING in 0.1s";
+        let buffer = "//:sometest      (cached) PASSED in 0.1s";
 
         let tests = parse(buffer);
 
@@ -110,5 +116,23 @@ mod test {
         let tests = parse(buffer);
 
         assert_eq!(tests, vec![label("some", "sometest")])
+    }
+
+    #[test]
+    fn test_parse_ignores_skipped_tests() {
+        let buffer = "//some:sometest      SKIPPED\n";
+
+        let tests = parse(buffer);
+
+        assert_eq!(tests, vec![])
+    }
+
+    #[test]
+    fn test_parse_ignores_label_names_in_the_middle_of_other_lines() {
+        let buffer = "some other output //some:sometest\n";
+
+        let tests = parse(buffer);
+
+        assert_eq!(tests, vec![])
     }
 }
