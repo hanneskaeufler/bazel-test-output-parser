@@ -1,0 +1,23 @@
+[32mLoading:[0m 
+[1A[K[32mLoading:[0m 0 packages loaded
+[1A[K[32mAnalyzing:[0m target //:foo (0 packages loaded, 0 targets configured)
+[1A[K[32mINFO: [0mAnalyzed target //:foo (0 packages loaded, 0 targets configured).
+
+[1A[K[32mINFO: [0mFound 1 test target...
+
+[1A[K[32m[0 / 2][0m [Prepa] BazelWorkspaceStatusAction stable-status.txt
+[1A[KTarget //:foo up-to-date:
+[32m[2 / 2][0m 1 / 1 tests;[0m checking cached actions[0m; last test: [32m//:foo[0m
+[1A[K  bazel-bin/foo
+[32m[2 / 2][0m 1 / 1 tests;[0m checking cached actions[0m; last test: [32m//:foo[0m
+[1A[K[32mINFO: [0mElapsed time: 0,084s, Critical Path: 0,00s
+[32m[2 / 2][0m 1 / 1 tests;[0m checking cached actions[0m; last test: [32m//:foo[0m
+[1A[K[32mINFO: [0m1 process: 1 internal.
+[32m[2 / 2][0m 1 / 1 tests;[0m checking cached actions[0m; last test: [32m//:foo[0m
+[1A[K[32mINFO:[0m Build completed successfully, 1 total action
+//:foo                                                          [0m[32m(cached) PASSED[0m in 0.0s
+
+Executed 0 out of 1 test: 1 test passes.
+There were tests whose specified size is too big. Use the --test_verbose_timeout_warnings command line option to see which ones these are.
+[1A[K[32mINFO:[0m Build completed successfully, 1 total action
+[0m

@@ -1,3 +1,4 @@
+use std::fs;
 use std::io::Write;
 use std::path::PathBuf;
 use std::process::{Command, Stdio};
@@ -98,4 +99,27 @@ fn test_prints_version() {
         format!("{}\n", env!("CARGO_PKG_VERSION")),
         String::from_utf8(output.stdout).unwrap()
     );
+}
+
+#[test]
+fn test_parses_real_logfile_with_ansi_escape_chars() {
+    let sample_file = PathBuf::from(format!("{}/tests/command.log", env!("CARGO_MANIFEST_DIR")));
+    println!("{}", sample_file.display());
+
+    let contents = fs::read_to_string(sample_file).expect("Something went wrong reading the file");
+
+    let mut process = Command::new(find_program())
+        .stdin(Stdio::piped())
+        .spawn()
+        .expect("failed to run the command");
+
+    process
+        .stdin
+        .as_ref()
+        .unwrap()
+        .write_all(contents.as_bytes())
+        .expect("failed to write to stdin");
+
+    let status = process.wait().expect("process did not exit");
+    assert!(status.success())
 }

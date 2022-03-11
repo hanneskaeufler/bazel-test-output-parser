@@ -8,3 +8,4 @@ doctest = false
 
 [dependencies]
 nom = "7"
+strip-ansi-escapes = "0.1.1"

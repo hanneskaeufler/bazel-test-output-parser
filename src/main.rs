@@ -1,4 +1,5 @@
 use bazel_test_output_parser::parser;
+use bazel_test_output_parser::sanitizer;
 use std::{env, io, io::Read};
 
 fn main() -> Result<(), io::Error> {
@@ -25,12 +26,8 @@ Usage example:
 
     let mut buffer = String::new();
     io::stdin().read_to_string(&mut buffer)?;
-
-    if buffer.is_empty() {
-        return Err(io::Error::new(io::ErrorKind::Other, "stdin was empty"));
-    }
-
-    let test_labels = parser::parse(&buffer);
+    let sanitized_buffer = sanitizer::sanitize(&buffer)?;
+    let test_labels = parser::parse(&sanitized_buffer);
 
     if test_labels.is_empty() {
         return Err(io::Error::new(io::ErrorKind::Other, "no tests were parsed"));
