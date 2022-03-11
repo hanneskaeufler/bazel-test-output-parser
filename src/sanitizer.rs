@@ -6,9 +6,7 @@ pub fn sanitize(buffer: &str) -> Result<String, io::Error> {
         return Err(io::Error::new(io::ErrorKind::Other, "stdin was empty"));
     }
 
-    let sanitized = strip_ansi_escapes::strip(&buffer)?;
-    let sanitized_str = String::from_utf8(sanitized)
-        .map_err(|err| io::Error::new(io::ErrorKind::Other, err.to_string()))?;
-
-    Ok(sanitized_str)
+    return Ok(strip_ansi_escapes::strip(&buffer)
+        .map(|s| String::from_utf8(s))?
+        .map_err(|err| io::Error::new(io::ErrorKind::Other, err.to_string()))?);
 }
