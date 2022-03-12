@@ -1,24 +1,11 @@
-use bazel_test_output_parser::parser;
-use bazel_test_output_parser::sanitizer;
+use bazel_test_output_parser::{help, parser, sanitizer};
 use std::{env, io, io::Read};
 
 fn main() -> Result<(), io::Error> {
     let args: Vec<String> = env::args().collect();
 
     if args.len() > 1 && args[1] == "--help" {
-        println!(
-            "\
-This is a stupid tiny parser for the output
-produced by bazel's (https://bazel.build) test runner.
-When running e.g. `bazel test //...`, a log file will
-pre written and printed to stdout, which can be parsed
-by this program to get a list of junit test results that
-bazel produced.
-
-Usage example:
-    cat my.log | {}",
-            env!("CARGO_PKG_NAME")
-        );
+        help::print_help();
         return Ok(());
     } else if args.len() > 1 && args[1] == "--version" {
         println!(env!("CARGO_PKG_VERSION"));
