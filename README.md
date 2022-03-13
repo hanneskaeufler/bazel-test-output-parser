@@ -14,3 +14,10 @@ For host:
 For x64 linux on an aarch64 macOS host:
 
 `./compile-to-linux`
+
+Note that for this to work, you need to modify `~/.cargo/config.toml`
+
+```
+[target.x86_64-unknown-linux-gnu]
+linker = "/path/to/zig-wrapper"
+```
