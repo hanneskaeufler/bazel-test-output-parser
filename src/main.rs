@@ -9,6 +9,7 @@ fn main() -> Result<(), io::Error> {
         return Ok(());
     } else if args.len() > 1 && args[1] == "--version" {
         println!(env!("CARGO_PKG_VERSION"));
+        return Ok(());
     }
 
     let mut buffer = String::new();
