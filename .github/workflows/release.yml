@@ -1,0 +1,48 @@
+name: Release
+
+on:
+  push:
+    tags: ["*"]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  release_macos:
+    runs-on: macos-11
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build
+        run: cargo build --release
+      - name: Archive release binary
+        uses: actions/upload-artifact@v3
+        with:
+          name: bazel-test-output-parser-aarch64-apple-darwin
+          path: target/release/bazel-test-output-parser
+
+  release_linux:
+    runs-on: ubuntu-18.04
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build
+        run: cargo build --release
+      - name: Archive release binary
+        uses: actions/upload-artifact@v3
+        with:
+          name: bazel-test-output-parser-x86_64-unknown-linux-gnu
+          path: target/release/bazel-test-output-parser
+
+  release_windows:
+    runs-on: windows-2022
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build
+        run: cargo build --release
+      - name: Archive release binary
+        uses: actions/upload-artifact@v3
+        with:
+          name: bazel-test-output-parser-x86_64-pc-windows-msvc.exe
+          path: target/release/bazel-test-output-parser.exe
