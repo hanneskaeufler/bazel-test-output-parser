@@ -46,5 +46,5 @@ jobs:
       - name: Archive release binary
         uses: actions/upload-artifact@v3
         with:
-          name: bazel-test-output-parser-x86_64-pc-windows-msvc
-          path: target/release/bazel-test-output-parser
+          name: bazel-test-output-parser-x86_64-pc-windows-msvc.exe
+          path: target/release/bazel-test-output-parser.exe
